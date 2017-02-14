@@ -9,12 +9,17 @@ TEST(Misc, StackTricks) {
     int b = 15;
     int *pa = &a;
     int *pb = &b;
-    ASSERT_EQ(1, pa - pb);
-    ASSERT_EQ(11, pb[1]);
-    ASSERT_EQ(15, *(&a - 1));
-    ASSERT_EQ(11, 1[&b]);
+    ptrdiff_t d = pa - pb;
+#ifdef __APPLE__
+    ASSERT_EQ(1, d);
+#else
+    ASSERT_EQ(-1, d);
+#endif
+    ASSERT_EQ(11, pb[d]);
+    ASSERT_EQ(15, *(&a - d));
+    ASSERT_EQ(11, d[&b]);
 
-    1[&b] = 50;
+    d[&b] = 50;
     ASSERT_EQ(50, a);
 }
 
